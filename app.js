@@ -6,14 +6,15 @@ const indexRouter = require('./routes/index');
 
 const app = express();
 const mqtt = require('mqtt');
+const MqttServer = require('./Controller/MqttServer');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const dir_Ip_Broker = '192.168.100.30';
+/*const dir_Ip_Broker = '192.168.100.30';
 const port = '1883';
 const client = (`mqtt://${dir_Ip_Broker}:${port}`);
-const clientId = `mqtt_${Math.random().toString(16).slice(3)}`;
+const clientId = `mqtt_${Math.random().toString(16).slice(3)}`;*/
 
 app.use('/', indexRouter);
 
@@ -26,7 +27,7 @@ app.use(function(req, res, next) {
     next(createError(404));
 });
 
-const connectClient = mqtt.connect(client, {
+/*const connectClient = mqtt.connect(client, {
     clientId,
     clean: true,
     connectTimeout:4000,
@@ -39,9 +40,9 @@ const topic = ['home/sembrio1/humidity', 'home/sembrio1/temperature','home/sembr
 
 connectClient.on('connect', ()=>{
     console.log('Conectado');
-    /**
+    /!**
      * Suscriptor puede recivir varios topic
-     */
+     *!/
     connectClient.subscribe(topic, ()=>{
         console.log(`Subcripción al topic ${topic}`);
     })
@@ -50,6 +51,12 @@ connectClient.on('connect', ()=>{
 connectClient.on('message', (topic,payload)=>{
     console.log("Mensaje Recibido " + topic + " Valor "+ payload);
 
+})*/
+const mqttCLient = new MqttServer();
+mqttCLient.connect();
+
+app.get("/dataServer", (req, res)=>{
+    mqttCLient.su
 })
 
 app.listen(3000, ()=>{
